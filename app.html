@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Counter Web App</h1>
+    <div>
+        Counter:
+        <input type="number" id="counter" value="0" />
+    </div>
+    <div>
+        Factor:
+        <input type="number" id="factorInput" placeholder="Enter a factor" />
+        <p>Product: <span id="product">0</span></p>
+    </div>
+
+    <script>
+        // Function to set a cookie
+        function setCookie(name, value) {
+            // Set cookie for a far future date (e.g., 10 years from now)
+            const expires = new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000).toUTCString();
+            document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+        }
+
+        // Function to get a cookie
+        function getCookie(name) {
+            return document.cookie.split('; ').reduce((r, v) => {
+                const parts = v.split('=');
+                return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+            }, '');
+        }
+
+        // Initialize values from cookies
+        let counter = parseInt(getCookie('counter')) || 0;
+        let factor = parseInt(getCookie('factor')) || 0;
+        let product = parseInt(getCookie('product')) || 0;
+
+        // Update the UI with stored values
+        document.getElementById('counter').value = counter;
+        document.getElementById('factorInput').value = factor;
+        document.getElementById('product').innerText = product;
+
+        // Event listener for counter input change
+        document.getElementById('counter').addEventListener('input', (event) => {
+            counter = parseInt(event.target.value) || 0;
+            setCookie('counter', counter); // Store in cookie indefinitely
+            updateProduct();
+        });
+
+        // Event listener for factor input change
+        document.getElementById('factorInput').addEventListener('input', (event) => {
+            factor = parseInt(event.target.value) || 0;
+            setCookie('factor', factor); // Store in cookie indefinitely
+            updateProduct();
+        });
+
+        // Function to update product
+        function updateProduct() {
+            product = counter * factor;
+            document.getElementById('product').innerText = product;
+            setCookie('product', product); // Store in cookie indefinitely
+        }
+    </script>
+</body>
+</html>
